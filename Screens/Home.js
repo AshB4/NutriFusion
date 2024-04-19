@@ -14,7 +14,7 @@ const Avatar = ({ src }) => {
 	);
 };
 
-const HomePage = () => {
+const HomeScreen = () => {
 	return (
 		<div className="main-page">
 			<div className="container-1">
@@ -42,4 +42,4 @@ const HomePage = () => {
 	);
 };
 
-export default HomePage;
+export default HomeScreen;
