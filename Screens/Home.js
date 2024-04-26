@@ -1,4 +1,5 @@
 /** @format */
+//This screen helps link you to your workout community
 
 // Main page component
 import React from "react";
@@ -24,21 +25,19 @@ const HomeScreen = () => {
 				<div className="header">
 					{/* <UserProfile imageURL="https://upload.wikimedia.org/wikipedia/en/1/1f/Beavis_BeavisandButtHead.png" /> */}
 					{/* <div className="box"></div>
-                    <div className="box"></div>
+                    <div className="box">Nav to diffrent areas in app using the horizontal grid</div>
                     <div className="box"></div>
                     <div className="box"></div>
                     <div className="box"></div> */}
 					<Avatar src="https://upload.wikimedia.org/wikipedia/en/1/1f/Beavis_BeavisandButtHead.png" />
-				</div>
-				<div className="body">
-					<h1 className="test">Hello World</h1>
-
-					<p style={{ fontFamily: "Bungee Spice" }}>
-						Welcome to nutrifit a workout community
-					</p>
-				</div>
-			</div>
+		<div className="workout-community-screen">
+		<h1>Join your workout community</h1>
+		<p>Get motivated and support from fellow fitness enthusiasts</p>
 		</div>
+				</div>
+				</div>	
+				</div>
+
 	);
 };
 

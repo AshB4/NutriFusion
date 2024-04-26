@@ -1,31 +1,122 @@
 /** @format */
 
-const getProductInfo = async () => {
-	// Replace 'YOUR_API_KEY' with your actual API key
-	const API_KEY = "YOUR_API_KEY";
+import React, { useState } from "react";
+import { View, Text, Button, StyleSheet } from "react-native";
+import { BarCodeScanner } from "expo-barcode-scanner";
 
-	// Define the URL of the API endpoint for retrieving product information
-	const url =
-		"https://world.openfoodfacts.org/api/v0/product/737628064502.json";
+const ScanFood = () => {
+	const [scanned, setScanned] = useState(false);
+	const [productData, setProductData] = useState(null);
 
-	try {
-		// Make a GET request to the API endpoint
-		const response = await fetch(`${url}?api_key=${API_KEY}`);
+	const handleBarCodeScanned = ({ type, data }) => {
+		setScanned(true);
+		getProductInfo(data);
+	};
 
-		// Check if the request was successful (status code 200)
-		if (response.ok) {
-			// Extract relevant information from the response JSON
-			const productData = await response.json();
-			// Print the product name
-			console.log("Product Name:", productData.product.product_name);
-		} else {
-			// Print an error message if the request was not successful
-			console.log("Error:", response.status);
+	const getProductInfo = async (barcode) => {
+		try {
+			const response = await fetch(
+				`https://world.openfoodfacts.net/api/v2/product/${barcode}?fields=product_name,nutriscore_data,nutriments,nutrition_grades`
+			);
+			if (!response.ok) {
+				throw new Error("Network response was not ok");
+			}
+			const data = await response.json();
+			setProductData(data);
+		} catch (error) {
+			console.error("There was a problem fetching the product data:", error);
 		}
-	} catch (error) {
-		console.error("Error:", error);
-	}
+	};
+
+	return (
+		<View style={styles.container}>
+			{!scanned ? (
+				<View style={styles.scanContainer}>
+					<Text style={styles.scanText}>Scan the product barcode</Text>
+					<BarCodeScanner
+						onBarCodeScanned={handleBarCodeScanned}
+						style={styles.barcodeScanner}
+					/>
+				</View>
+			) : (
+				<View style={styles.resultContainer}>
+					{productData ? (
+						<View>
+							<Text style={styles.title}>
+								{productData.product.product_name}
+							</Text>
+							<Text style={styles.subtitle}>Nutritional Information:</Text>
+							<View style={styles.nutrientContainer}>
+								<Text>
+									Energy: {productData.product.nutriments.energy} kcal
+								</Text>
+								<Text>Fat: {productData.product.nutriments.fat} g</Text>
+								<Text>
+									Carbohydrates: {productData.product.nutriments.carbohydrates}{" "}
+									g
+								</Text>
+								<Text>
+									Proteins: {productData.product.nutriments.proteins} g
+								</Text>
+								<Text>Sugars: {productData.product.nutriments.sugars} g</Text>
+								<Text>Sodium: {productData.product.nutriments.sodium} g</Text>
+							</View>
+							<Text style={styles.grade}>
+								Nutrition Grade:{" "}
+								{productData.nutriscore_data.grade.toUpperCase()}
+							</Text>
+						</View>
+					) : (
+						<Text>Loading product data...</Text>
+					)}
+					<Button title="Scan Again" onPress={() => setScanned(false)} />
+				</View>
+			)}
+		</View>
+	);
 };
 
-// Call the function to fetch product information
-getProductInfo();
+const styles = StyleSheet.create({
+	container: {
+		flex: 1,
+		justifyContent: "center",
+		alignItems: "center",
+	},
+	scanContainer: {
+		flex: 1,
+		justifyContent: "center",
+		alignItems: "center",
+	},
+	scanText: {
+		fontSize: 18,
+		marginBottom: 20,
+	},
+	barcodeScanner: {
+		width: "100%",
+		height: "50%",
+	},
+	resultContainer: {
+		flex: 1,
+		justifyContent: "center",
+		alignItems: "center",
+	},
+	title: {
+		fontSize: 24,
+		fontWeight: "bold",
+		marginBottom: 10,
+	},
+	subtitle: {
+		fontSize: 18,
+		fontWeight: "bold",
+		marginBottom: 5,
+	},
+	nutrientContainer: {
+		marginBottom: 10,
+	},
+	grade: {
+		fontSize: 16,
+		marginTop: 10,
+	},
+});
+
+export default ScanFood;

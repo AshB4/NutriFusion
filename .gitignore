@@ -1,5 +1,7 @@
 # Learn more https://docs.github.com/en/get-started/getting-started-with-git/ignoring-files
+
 #My ignore files
+FoodScanner.js
 
 # dependencies
 node_modules/

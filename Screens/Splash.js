@@ -3,3 +3,4 @@
 //Used as Loading screen typically, Provides smooth transition in to app
 //use for Promos, Brand Recognition,
 // Ideally, splash screens should be lightweight, load quickly, and seamlessly transition into the main interface of the application.
+//Format screen and over lay the ad for the app using the Lady
